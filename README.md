@@ -109,20 +109,37 @@ Open the [offline dashboard](dashboard/portfolio-dashboard.html) directly in a b
 
 ### Dashboard preview
 
+Click any screenshot to open the original 2048×1152 image.
+
+### 01 · Executive pulse
+
 <p align="center">
-  <img src="docs/images/01-executive-pulse.png" alt="Executive pulse dashboard with DAU, MAU, active viewers, revenue, experiment lift and match rankings" width="100%">
+  <a href="docs/images/01-executive-pulse.png"><img src="docs/images/01-executive-pulse.png" alt="Executive pulse dashboard with DAU, MAU, active viewers, revenue, experiment lift and match rankings" width="100%"></a>
 </p>
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/images/02-product-journey.png" alt="Product journey dashboard with ordered funnel and retention"><br><strong>02 · Product journey</strong></td>
-    <td width="50%"><img src="docs/images/03-sports-engagement.png" alt="Sports engagement dashboard with match viewers, key moments and football context"><br><strong>03 · Sports engagement</strong></td>
-  </tr>
-  <tr>
-    <td width="50%"><img src="docs/images/04-marketing-economics.png" alt="Marketing economics dashboard with CAC, LTV30 and ROAS30"><br><strong>04 · Marketing economics</strong></td>
-    <td width="50%"><img src="docs/images/05-experiment-quality.png" alt="Experiment and quality dashboard with conversion lift, confidence interval and data checks"><br><strong>05 · Experiment &amp; quality</strong></td>
-  </tr>
-</table>
+### 02 · Product journey
+
+<p align="center">
+  <a href="docs/images/02-product-journey.png"><img src="docs/images/02-product-journey.png" alt="Product journey dashboard with ordered funnel and retention" width="100%"></a>
+</p>
+
+### 03 · Sports engagement
+
+<p align="center">
+  <a href="docs/images/03-sports-engagement.png"><img src="docs/images/03-sports-engagement.png" alt="Sports engagement dashboard with match viewers, key moments and football context" width="100%"></a>
+</p>
+
+### 04 · Marketing economics
+
+<p align="center">
+  <a href="docs/images/04-marketing-economics.png"><img src="docs/images/04-marketing-economics.png" alt="Marketing economics dashboard with CAC, LTV30 and ROAS30" width="100%"></a>
+</p>
+
+### 05 · Experiment &amp; quality
+
+<p align="center">
+  <a href="docs/images/05-experiment-quality.png"><img src="docs/images/05-experiment-quality.png" alt="Experiment and quality dashboard with conversion lift, confidence interval and data checks" width="100%"></a>
+</p>
 
 The [Looker Studio build guide](dashboard/LOOKER_STUDIO_BUILD_GUIDE.md) maps each chart, parameter, control and calculated field to the BigQuery marts. The public Looker URL is added only after incognito access is verified; no personal-account URL is fabricated here.
 
