@@ -107,6 +107,23 @@ The five report pages are:
 
 Open the [offline dashboard](dashboard/portfolio-dashboard.html) directly in a browser. It includes working page navigation, metric selection, platform filtering and match-level drill context using the generated extracts.
 
+### Dashboard preview
+
+<p align="center">
+  <img src="docs/images/01-executive-pulse.png" alt="Executive pulse dashboard with DAU, MAU, active viewers, revenue, experiment lift and match rankings" width="100%">
+</p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/02-product-journey.png" alt="Product journey dashboard with ordered funnel and retention"><br><strong>02 · Product journey</strong></td>
+    <td width="50%"><img src="docs/images/03-sports-engagement.png" alt="Sports engagement dashboard with match viewers, key moments and football context"><br><strong>03 · Sports engagement</strong></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/04-marketing-economics.png" alt="Marketing economics dashboard with CAC, LTV30 and ROAS30"><br><strong>04 · Marketing economics</strong></td>
+    <td width="50%"><img src="docs/images/05-experiment-quality.png" alt="Experiment and quality dashboard with conversion lift, confidence interval and data checks"><br><strong>05 · Experiment &amp; quality</strong></td>
+  </tr>
+</table>
+
 The [Looker Studio build guide](dashboard/LOOKER_STUDIO_BUILD_GUIDE.md) maps each chart, parameter, control and calculated field to the BigQuery marts. The public Looker URL is added only after incognito access is verified; no personal-account URL is fabricated here.
 
 ## Reproducible findings
