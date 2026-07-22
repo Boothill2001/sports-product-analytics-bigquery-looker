@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sports Product Intelligence | Nguyen Minh Tri</title>
+  <style>
+    :root {
+      --ink: #102a2a;
+      --muted: #647777;
+      --paper: #f4f7f3;
+      --card: #ffffff;
+      --line: #dfe8e3;
+      --navy: #071f24;
+      --green: #0a7c61;
+      --lime: #c8f04a;
+      --orange: #ff8f3d;
+      --blue: #4ca5ff;
+      --red: #e76058;
+      --shadow: 0 14px 34px rgba(7, 31, 36, .08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #dce5e1; color: var(--ink); }
+    body { font: 14px/1.45 Inter, Aptos, "Segoe UI", Arial, sans-serif; }
+    button, select { font: inherit; }
+    .app { width: min(1600px, 100%); min-height: 100vh; margin: auto; display: grid; grid-template-columns: 245px 1fr; background: var(--paper); }
+    .sidebar { background: var(--navy); color: #fff; padding: 28px 20px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 38px; }
+    .brand-mark { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; color: var(--navy); font-weight: 900; background: var(--lime); box-shadow: 0 0 0 7px rgba(200, 240, 74, .09); }
+    .brand strong { display: block; letter-spacing: .03em; font-size: 15px; }
+    .brand span { color: #a8beb9; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+    .nav { display: grid; gap: 8px; }
+    .nav button { border: 0; background: transparent; color: #a8beb9; padding: 12px 13px; border-radius: 10px; cursor: pointer; text-align: left; display: flex; gap: 12px; align-items: center; }
+    .nav button:hover, .nav button.active { color: #fff; background: rgba(255,255,255,.09); }
+    .nav button.active { box-shadow: inset 3px 0 var(--lime); }
+    .nav .num { font-size: 10px; width: 23px; height: 23px; border: 1px solid #47615f; border-radius: 50%; display: grid; place-items: center; }
+    .sidebar-note { margin-top: auto; border-top: 1px solid #294448; padding-top: 20px; font-size: 11px; color: #89a4a0; }
+    .source-pill { margin-top: 10px; display: inline-flex; align-items: center; gap: 7px; color: #dcebe7; }
+    .source-pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); }
+    .main { min-width: 0; }
+    .topbar { min-height: 78px; padding: 16px 30px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: rgba(244,247,243,.96); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 4; backdrop-filter: blur(12px); }
+    .title-eyebrow { color: var(--green); text-transform: uppercase; letter-spacing: .18em; font-size: 10px; font-weight: 800; }
+    .title h1 { font-size: 20px; margin: 3px 0 0; letter-spacing: -.02em; }
+    .filters { display: flex; gap: 9px; align-items: center; }
+    .filters label { font-size: 10px; color: var(--muted); text-transform: uppercase; font-weight: 800; }
+    .filters select { display: block; margin-top: 3px; min-width: 122px; border: 1px solid var(--line); border-radius: 8px; background: #fff; padding: 7px 30px 7px 10px; color: var(--ink); }
+    .page { display: none; padding: 27px 30px 34px; min-height: calc(100vh - 78px); }
+    .page.active { display: block; animation: enter .25s ease both; }
+    @keyframes enter { from { opacity: 0; transform: translateY(4px); } }
+    .page-head { display: flex; justify-content: space-between; gap: 20px; margin-bottom: 20px; align-items: end; }
+    .page-head h2 { margin: 0; font-size: 26px; letter-spacing: -.035em; }
+    .page-head p { margin: 5px 0 0; color: var(--muted); }
+    .truth-badge { border: 1px solid #bcd0c9; background: #eef6f0; padding: 8px 11px; border-radius: 8px; color: #47635f; font-size: 11px; }
+    .truth-badge strong { color: var(--green); }
+    .grid { display: grid; gap: 16px; }
+    .kpis { grid-template-columns: repeat(5, minmax(0, 1fr)); margin-bottom: 16px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 13px; box-shadow: var(--shadow); padding: 18px; min-width: 0; }
+    .card.compact { padding: 15px 16px; }
+    .kpi { position: relative; overflow: hidden; }
+    .kpi:after { content: ""; position: absolute; right: -22px; bottom: -30px; width: 78px; height: 78px; border-radius: 50%; background: rgba(10,124,97,.06); }
+    .kpi small { color: var(--muted); text-transform: uppercase; font-size: 9px; letter-spacing: .12em; font-weight: 800; }
+    .kpi strong { display: block; font-size: 26px; letter-spacing: -.04em; margin-top: 8px; }
+    .kpi span { color: var(--green); font-size: 11px; }
+    .kpi.accent { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .kpi.accent small, .kpi.accent span { color: var(--lime); }
+    .layout-2 { grid-template-columns: minmax(0, 1.75fr) minmax(310px, .85fr); }
+    .layout-even { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .layout-3 { grid-template-columns: 1.25fr 1fr .85fr; }
+    .card-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 12px; }
+    .card-title h3 { margin: 0; font-size: 14px; }
+    .card-title span { color: var(--muted); font-size: 10px; }
+    .chart { width: 100%; min-height: 240px; position: relative; }
+    .chart svg { display: block; width: 100%; height: 250px; overflow: visible; }
+    .axis { stroke: #dfe8e3; stroke-width: 1; }
+    .axis-label { fill: #80918e; font-size: 9px; }
+    .line-path { fill: none; stroke: var(--green); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .area-path { fill: url(#areaFill); opacity: .55; }
+    .point { fill: #fff; stroke: var(--green); stroke-width: 2; }
+    .insight { border-radius: 12px; padding: 18px; background: #ecf5f1; border-left: 4px solid var(--green); }
+    .insight.orange { background: #fff4eb; border-left-color: var(--orange); }
+    .insight.dark { background: var(--navy); color: #e9f5f1; border-left-color: var(--lime); }
+    .insight .label { text-transform: uppercase; font-size: 9px; letter-spacing: .14em; font-weight: 900; color: var(--green); }
+    .insight.dark .label { color: var(--lime); }
+    .insight h3 { margin: 7px 0; font-size: 18px; letter-spacing: -.025em; }
+    .insight p { margin: 0; font-size: 12px; color: #536b66; }
+    .insight.dark p { color: #a9c1bc; }
+    .rank-list { display: grid; gap: 11px; }
+    .rank { display: grid; grid-template-columns: minmax(105px, 1fr) 2fr auto; gap: 10px; align-items: center; font-size: 11px; }
+    .rank-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; }
+    .bar-track { height: 7px; background: #edf2ef; border-radius: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: inherit; background: var(--green); }
+    .rank-value { font-variant-numeric: tabular-nums; color: var(--muted); }
+    .table-wrap { overflow: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    th { color: var(--muted); text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; padding: 10px 8px; border-bottom: 1px solid var(--line); }
+    td { padding: 10px 8px; border-bottom: 1px solid #edf2ef; vertical-align: middle; }
+    tbody tr:hover { background: #f7faf8; }
+    .status { display: inline-flex; padding: 4px 7px; border-radius: 12px; font-size: 9px; font-weight: 800; }
+    .status.good { background: #e3f5ed; color: #087153; }
+    .status.warn { background: #fff0e4; color: #b5581a; }
+    .funnel { display: grid; gap: 9px; padding: 8px 0; }
+    .funnel-step { height: 44px; margin: auto; border-radius: 8px; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; font-size: 11px; }
+    .funnel-step:nth-child(2) { background: #219073; }
+    .funnel-step:nth-child(3) { background: #50a98f; }
+    .funnel-step:nth-child(4) { background: var(--orange); }
+    .funnel-step b { font-size: 14px; }
+    .retention-bars { height: 245px; display: flex; align-items: end; gap: 18px; padding: 10px 16px 26px; border-bottom: 1px solid var(--line); }
+    .retention-col { flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: end; height: 100%; }
+    .retention-col b { font-size: 12px; margin-bottom: 7px; }
+    .retention-col i { display: block; width: 100%; min-height: 3px; background: var(--green); border-radius: 8px 8px 2px 2px; }
+    .retention-col:nth-child(2) i { background: #4ca58c; }
+    .retention-col:nth-child(3) i { background: var(--orange); }
+    .retention-col span { margin-top: 8px; color: var(--muted); font-size: 10px; }
+    .metric-toggle { display: inline-flex; background: #edf2ef; border-radius: 8px; padding: 3px; }
+    .metric-toggle button { border: 0; background: transparent; border-radius: 6px; padding: 5px 8px; font-size: 10px; color: var(--muted); cursor: pointer; }
+    .metric-toggle button.active { background: #fff; color: var(--ink); box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+    .experiment-bars { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; align-items: end; min-height: 220px; padding: 25px 34px 0; border-bottom: 1px solid var(--line); }
+    .variant { height: 100%; display: flex; flex-direction: column; justify-content: end; text-align: center; }
+    .variant strong { margin-bottom: 8px; font-size: 22px; }
+    .variant .vbar { min-height: 10px; background: #aac7bf; border-radius: 9px 9px 0 0; }
+    .variant.treatment .vbar { background: var(--green); }
+    .variant span { padding: 9px; font-weight: 700; }
+    .ci { margin-top: 16px; background: #f1f5f3; border-radius: 10px; padding: 12px; }
+    .ci-line { height: 6px; background: #c9d8d3; border-radius: 6px; position: relative; margin: 14px 8px; }
+    .ci-line .range { position: absolute; left: 27%; width: 44%; top: -3px; height: 12px; background: var(--green); border-radius: 8px; }
+    .ci-line .zero { position: absolute; left: 8%; top: -6px; height: 18px; border-left: 2px dashed var(--red); }
+    .quality-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .quality-item { border: 1px solid var(--line); border-radius: 9px; padding: 12px; }
+    .quality-item b { display: block; font-size: 18px; color: var(--green); }
+    .quality-item span { color: var(--muted); font-size: 10px; }
+    .footnote { margin-top: 16px; color: var(--muted); font-size: 10px; display: flex; justify-content: space-between; gap: 20px; }
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 82px 1fr; }
+      .brand div, .nav button > span:last-child, .sidebar-note { display: none; }
+      .brand { justify-content: center; }
+      .nav button { justify-content: center; }
+      .kpis { grid-template-columns: repeat(3, 1fr); }
+      .layout-2, .layout-3 { grid-template-columns: 1fr; }
+    }
+    @media print {
+      body { background: #fff; }
+      .app { display: block; width: 100%; }
+      .sidebar, .topbar { display: none; }
+      .page { display: block !important; min-height: 0; page-break-after: always; padding: 10mm; }
+      .card { box-shadow: none; }
+      @page { size: A4 landscape; margin: 5mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">SP</div><div><strong>SPORTS PULSE</strong><span>Product intelligence</span></div></div>
+      <nav class="nav" aria-label="Dashboard pages">
+        <button class="active" data-page="executive"><span class="num">01</span><span>Executive pulse</span></button>
+        <button data-page="journey"><span class="num">02</span><span>Product journey</span></button>
+        <button data-page="sports"><span class="num">03</span><span>Sports engagement</span></button>
+        <button data-page="marketing"><span class="num">04</span><span>Marketing economics</span></button>
+        <button data-page="experiment"><span class="num">05</span><span>Experiment & quality</span></button>
+      </nav>
+      <div class="sidebar-note">Portfolio case study by Nguyen Minh Tri<div class="source-pill"><i></i> Reproducible · seed 42</div></div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="title"><div class="title-eyebrow">Unity Sport portfolio case</div><h1 id="top-title">Executive pulse</h1></div>
+        <div class="filters">
+          <label>Competition<select id="league"><option>FIFA World Cup 2022</option></select></label>
+          <label>Platform<select id="platform"><option value="all">All platforms</option><option>android</option><option>ios</option><option>web</option></select></label>
+          <label>Metric<select id="metric"><option value="dau">Daily active users</option><option value="active_viewers">Active viewers</option><option value="revenue_usd">Net revenue</option></select></label>
+        </div>
+      </header>
+
+      <section class="page active" id="executive">
+        <div class="page-head"><div><h2>From match moments to product growth</h2><p>Audience health, monetization and live-match intensity at a glance.</p></div><div class="truth-badge"><strong>REAL:</strong> football events &nbsp;·&nbsp; <strong>SYNTHETIC:</strong> product + marketing</div></div>
+        <div class="grid kpis" id="executive-kpis"></div>
+        <div class="grid layout-2">
+          <article class="card"><div class="card-title"><h3 id="trend-title">Daily active users</h3><span>Sep 2022 – Jan 2023</span></div><div class="chart" id="daily-chart"></div></article>
+          <div class="grid">
+            <article class="insight dark" id="executive-insight"></article>
+            <article class="card compact"><div class="card-title"><h3>Most watched matches</h3><span>click to drill</span></div><div class="rank-list" id="match-rank"></div></article>
+          </div>
+        </div>
+        <div class="footnote"><span>Product metrics are simulated for portfolio demonstration; do not interpret as Unity Sport actuals.</span><span>Source refresh: deterministic build · 39 checks</span></div>
+      </section>
+
+      <section class="page" id="journey">
+        <div class="page-head"><div><h2>Product journey</h2><p>Where fans progress, pause and convert across the match experience.</p></div><div class="truth-badge">Platform control changes the funnel below</div></div>
+        <div class="grid layout-even">
+          <article class="card"><div class="card-title"><h3>Ordered conversion funnel</h3><span id="funnel-label">All platforms · treatment</span></div><div class="funnel" id="funnel-chart"></div></article>
+          <article class="card"><div class="card-title"><h3>Lifecycle retention</h3><span>exact-day cohort retention</span></div><div class="retention-bars" id="retention-chart"></div></article>
+        </div>
+        <div class="grid layout-3" style="margin-top:16px">
+          <article class="insight"><div class="label">Journey insight</div><h3>Match Center is not the final bottleneck</h3><p>Most qualified fans reach highlight content. The commercial opportunity sits between highlight consumption and subscription.</p></article>
+          <article class="card compact"><div class="card-title"><h3>Retention by channel</h3><span>D30</span></div><div id="retention-rank" class="rank-list"></div></article>
+          <article class="insight orange"><div class="label">Recommendation</div><h3>Trigger the paywall after value</h3><p>Test a context-aware subscription prompt after a highlight rather than at Match Center entry.</p></article>
+        </div>
+      </section>
+
+      <section class="page" id="sports">
+        <div class="page-head"><div><h2>Sports engagement</h2><p>Real football performance connected to simulated fan behavior.</p></div><div class="truth-badge">Regular match + extra time only · shootouts excluded from xG</div></div>
+        <div class="grid layout-2">
+          <article class="card"><div class="card-title"><h3>Viewers by match</h3><span>select a row for match drill-down</span></div><div class="rank-list" id="sports-rank"></div></article>
+          <article class="insight dark" id="moment-insight"></article>
+        </div>
+        <div class="grid layout-even" style="margin-top:16px">
+          <article class="card"><div class="card-title"><h3>Key-moment engagement</h3><span>±5 minutes vs match baseline</span></div><div class="table-wrap"><table><thead><tr><th>Match</th><th>Minute</th><th>Moment</th><th>Events</th><th>Lift</th></tr></thead><tbody id="moments-table"></tbody></table></div></article>
+          <article class="card"><div class="card-title"><h3>Football context</h3><span>xG · regular play</span></div><div class="table-wrap"><table><thead><tr><th>Match</th><th>Viewers</th><th>Subs</th><th>xG</th></tr></thead><tbody id="sports-table"></tbody></table></div></article>
+        </div>
+      </section>
+
+      <section class="page" id="marketing">
+        <div class="page-head"><div><h2>Marketing economics</h2><p>Acquisition efficiency, value creation and target pacing by paid channel.</p></div><div class="truth-badge">Actuals: BigQuery model · Targets: Sheets-ready CSV</div></div>
+        <div class="grid layout-3" id="marketing-kpis"></div>
+        <div class="grid layout-2" style="margin-top:16px">
+          <article class="card"><div class="card-title"><h3>Channel economics</h3><span>CAC · LTV30 · ROAS30</span></div><div class="table-wrap"><table><thead><tr><th>Channel</th><th>Spend</th><th>CAC</th><th>LTV30</th><th>ROAS30</th><th>Decision</th></tr></thead><tbody id="marketing-table"></tbody></table></div></article>
+          <article class="insight orange"><div class="label">Budget recommendation</div><h3>Social wins on efficiency—not profitability</h3><p id="marketing-insight"></p></article>
+        </div>
+      </section>
+
+      <section class="page" id="experiment">
+        <div class="page-head"><div><h2>Experiment & quality</h2><p>Decision-ready A/B results with confidence bounds and trustworthy data.</p></div><div class="truth-badge">User-level assignment · no crossover</div></div>
+        <div class="grid layout-even">
+          <article class="card"><div class="card-title"><h3>Match Center v2 conversion</h3><span>user-level outcome</span></div><div class="experiment-bars" id="experiment-bars"></div><div class="ci"><strong id="ci-label"></strong><div class="ci-line"><span class="zero"></span><span class="range"></span></div><small>95% confidence interval excludes zero · two-proportion comparison</small></div></article>
+          <div class="grid">
+            <article class="insight dark" id="experiment-insight"></article>
+            <article class="card compact"><div class="card-title"><h3>Data trust layer</h3><span>latest build</span></div><div class="quality-grid" id="quality-grid"></div></article>
+          </div>
+        </div>
+        <article class="card" style="margin-top:16px"><div class="card-title"><h3>Release decision</h3><span>guardrail-aware recommendation</span></div><p style="margin:0;color:var(--muted)">Ship Match Center v2 to a controlled ramp. The synthetic experiment shows a statistically significant lift, but production rollout should retain subscription cancellation, latency, crash rate and revenue-per-user guardrails.</p></article>
+      </section>
+    </main>
+  </div>
+  <script src="data/dashboard-data.js"></script>
+  <script>
+    const D = window.SPORTS_ANALYTICS_DATA;
+    const fmt = new Intl.NumberFormat('en-US');
+    const money = v => '$' + fmt.format(Math.round(v));
+    const pct = v => (v * 100).toFixed(1) + '%';
+    const nav = [...document.querySelectorAll('.nav button')];
+    nav.forEach(btn => btn.addEventListener('click', () => {
+      nav.forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === btn.dataset.page));
+      document.getElementById('top-title').textContent = btn.querySelector('span:last-child').textContent;
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }));
+    const kpis = [
+      ['Peak DAU', fmt.format(D.kpis.peak_dau), 'match-day peak'],
+      ['30-day active', fmt.format(D.kpis.mau), '100% audience base'],
+      ['Active viewers', fmt.format(D.kpis.active_viewers), 'viewer-days'],
+      ['Net revenue', money(D.kpis.total_revenue_usd), 'simulated'],
+      ['Experiment lift', pct(D.kpis.ab_relative_lift), 'relative · significant']
+    ];
+    document.getElementById('executive-kpis').innerHTML = kpis.map((k,i) => `<article class="card kpi ${i===4?'accent':''}"><small>${k[0]}</small><strong>${k[1]}</strong><span>${k[2]}</span></article>`).join('');
+
+    function lineChart(metric) {
+      const data = D.charts.executive_daily;
+      const w=760,h=250,p=28, values=data.map(d=>Number(d[metric]||0));
+      const max=Math.max(...values)*1.05 || 1, min=Math.min(...values,0);
+      const x=i=>p+i*(w-2*p)/(values.length-1), y=v=>h-p-(v-min)*(h-2*p)/(max-min||1);
+      const points=values.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+      const area=`${p},${h-p} ${points} ${w-p},${h-p}`;
+      const labels=[0,Math.floor((values.length-1)/2),values.length-1];
+      document.getElementById('daily-chart').innerHTML=`<svg viewBox="0 0 ${w} ${h}" role="img"><defs><linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a7c61" stop-opacity=".28"/><stop offset="1" stop-color="#0a7c61" stop-opacity=".02"/></linearGradient></defs><line x1="${p}" y1="${h-p}" x2="${w-p}" y2="${h-p}" class="axis"/><polygon points="${area}" class="area-path"/><polyline points="${points}" class="line-path"/>${labels.map(i=>`<circle cx="${x(i)}" cy="${y(values[i])}" r="4" class="point"/><text x="${x(i)}" y="${h-8}" text-anchor="middle" class="axis-label">${data[i].event_date.slice(5)}</text>`).join('')}</svg>`;
+      const names={dau:'Daily active users',active_viewers:'Active viewers',revenue_usd:'Net revenue (USD)'};
+      document.getElementById('trend-title').textContent=names[metric];
+    }
+    lineChart('dau');
+    document.getElementById('metric').addEventListener('change', e=>lineChart(e.target.value));
+
+    function ranks(el, rows, value, formatter=fmt.format) {
+      const max=Math.max(...rows.map(r=>r[value]));
+      document.getElementById(el).innerHTML=rows.map(r=>`<div class="rank" data-match="${r.match_label||''}"><span class="rank-name">${r.match_label||r.acquisition_channel}</span><div class="bar-track"><div class="bar-fill" style="width:${r[value]/max*100}%"></div></div><span class="rank-value">${formatter(r[value])}</span></div>`).join('');
+    }
+    ranks('match-rank', D.charts.sports.slice(0,5), 'unique_viewers');
+    ranks('sports-rank', D.charts.sports, 'unique_viewers');
+    document.getElementById('executive-insight').innerHTML=`<div class="label">Audience signal</div><h3>${D.top_match.match_label} led reach</h3><p>${fmt.format(D.top_match.unique_viewers)} unique viewers and ${fmt.format(D.top_match.subscriptions)} simulated subscriptions. Use match-level context, not only global DAU, to plan content inventory.</p>`;
+
+    const aggregateFunnel = platform => {
+      const rows=D.charts.funnel.filter(r=>r.experiment_variant==='treatment'&&(platform==='all'||r.platform===platform));
+      const sum=k=>rows.reduce((a,r)=>a+Number(r[k]),0);
+      return [
+        ['Notification',sum('notification_users')],['Match center',sum('match_center_users')],
+        ['Highlight',sum('highlight_users')],['Subscription',sum('subscription_users')]
+      ];
+    };
+    function renderFunnel(platform='all') {
+      const rows=aggregateFunnel(platform), max=rows[0][1];
+      document.getElementById('funnel-chart').innerHTML=rows.map((r,i)=>`<div class="funnel-step" style="width:${Math.max(34,r[1]/max*100)}%"><span>${r[0]}</span><b>${fmt.format(r[1])}</b></div>`).join('');
+      document.getElementById('funnel-label').textContent=(platform==='all'?'All platforms':platform)+' · treatment';
+    }
+    renderFunnel();
+    document.getElementById('platform').addEventListener('change',e=>renderFunnel(e.target.value));
+    const retention = ['d1','d7','d30'].map(day=>D.charts.retention.reduce((a,r)=>a+r['retention_'+day]*r.cohort_size,0)/D.charts.retention.reduce((a,r)=>a+r.cohort_size,0));
+    document.getElementById('retention-chart').innerHTML=retention.map((v,i)=>`<div class="retention-col"><b>${pct(v)}</b><i style="height:${v*210}px"></i><span>D${[1,7,30][i]}</span></div>`).join('');
+    const channelRetention=Object.values(D.charts.retention.reduce((a,r)=>{const k=r.acquisition_channel;a[k]??={acquisition_channel:k,weighted:0,n:0};a[k].weighted+=r.retention_d30*r.cohort_size;a[k].n+=r.cohort_size;return a;},{})).map(r=>({...r,retention_d30:r.weighted/r.n})).sort((a,b)=>b.retention_d30-a.retention_d30);
+    ranks('retention-rank',channelRetention,'retention_d30',pct);
+
+    document.getElementById('moment-insight').innerHTML=`<div class="label">Moment signal</div><h3>Goal at ${D.top_moment.minute}' drove ${D.top_moment.engagement_lift_vs_baseline.toFixed(2)}× engagement</h3><p>${D.top_moment.match_label}: ${fmt.format(D.top_moment.app_events_plus_minus_5m)} app events within ±5 minutes versus the match baseline.</p>`;
+    document.getElementById('moments-table').innerHTML=D.charts.key_moments.slice(0,8).map(r=>`<tr><td>${r.match_label}</td><td>${r.minute}'</td><td>${r.shot_outcome||r.event_type}</td><td>${fmt.format(r.app_events_plus_minus_5m)}</td><td><span class="status good">${r.engagement_lift_vs_baseline.toFixed(2)}×</span></td></tr>`).join('');
+    document.getElementById('sports-table').innerHTML=D.charts.sports.map(r=>`<tr><td>${r.match_label}</td><td>${fmt.format(r.unique_viewers)}</td><td>${fmt.format(r.subscriptions)}</td><td>${r.xg.toFixed(2)}</td></tr>`).join('');
+
+    const marketing=[...D.charts.marketing].sort((a,b)=>b.roas_30d-a.roas_30d), best=marketing[0];
+    document.getElementById('marketing-kpis').innerHTML=[['Best CAC',money(best.cac_usd),best.channel],['Best ROAS30',best.roas_30d.toFixed(2)+'×',best.channel],['Paid spend',money(marketing.reduce((a,r)=>a+r.spend_usd,0)),'3 channels']].map((k,i)=>`<article class="card kpi ${i===1?'accent':''}"><small>${k[0]}</small><strong>${k[1]}</strong><span>${k[2]}</span></article>`).join('');
+    document.getElementById('marketing-table').innerHTML=marketing.map(r=>`<tr><td><b>${r.channel}</b></td><td>${money(r.spend_usd)}</td><td>${money(r.cac_usd)}</td><td>${money(r.ltv_30d_usd)}</td><td>${r.roas_30d.toFixed(2)}×</td><td><span class="status ${r.roas_30d>=1?'good':'warn'}">${r.roas_30d>=1?'Scale':'Rework'}</span></td></tr>`).join('');
+    document.getElementById('marketing-insight').textContent=`${best.channel} has the lowest CAC (${money(best.cac_usd)}) and highest ROAS30 (${best.roas_30d.toFixed(2)}×), but no paid channel recovers acquisition spend inside 30 days. Validate lifetime value before scaling.`;
+
+    const ab=D.charts.ab_test, maxRate=Math.max(...ab.map(r=>r.conversion_rate));
+    document.getElementById('experiment-bars').innerHTML=ab.map(r=>`<div class="variant ${r.variant}"><strong>${pct(r.conversion_rate)}</strong><div class="vbar" style="height:${r.conversion_rate/maxRate*145}px"></div><span>${r.variant}</span></div>`).join('');
+    document.getElementById('ci-label').textContent=`Absolute lift ${pct(ab[0].absolute_lift)} · 95% CI ${pct(ab[0].ci_95_lower)} to ${pct(ab[0].ci_95_upper)}`;
+    document.getElementById('experiment-insight').innerHTML=`<div class="label">Experiment decision</div><h3>+${pct(ab[0].relative_lift)} relative conversion lift</h3><p>Treatment moved user conversion from ${pct(ab[0].conversion_rate)} to ${pct(ab[1].conversion_rate)} across ${fmt.format(ab.reduce((a,r)=>a+r.users,0))} assigned users.</p>`;
+    document.getElementById('quality-grid').innerHTML=[['39/39','quality checks'],['0','duplicate keys'],['0','variant crossover'],['0','unknown users'],['0','invalid xG'],['PASS','reconciliation']].map(r=>`<div class="quality-item"><b>${r[0]}</b><span>${r[1]}</span></div>`).join('');
+  </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sports-product-analytics"
+version = "0.1.0"
+description = "BigQuery and Looker Studio portfolio for football product analytics"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "numpy>=1.26,<3",
+  "pandas>=2.2,<3",
+  "pyarrow>=17,<20",
+  "requests>=2.32,<3",
+]
+
+[project.optional-dependencies]
+cloud = [
+  "google-cloud-bigquery>=3.25,<4",
+  "google-cloud-bigquery-storage>=2.27,<3",
+]
+dev = [
+  "mypy>=1.14,<2",
+  "pandas-stubs>=2.2,<3",
+  "pytest>=8.3,<9",
+  "pytest-cov>=6,<7",
+  "ruff>=0.9,<1",
+  "sqlfluff>=3.3,<4",
+  "types-requests>=2.32,<3",
+]
+
+[project.scripts]
+sports-analytics = "sports_product_analytics.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+addopts = "-q --strict-markers --cov=sports_product_analytics --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+omit = [
+  "src/sports_product_analytics/cli.py",
+  "src/sports_product_analytics/bigquery.py",
+  "src/sports_product_analytics/statsbomb.py",
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+check_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.sqlfluff.core]
+dialect = "bigquery"
+templater = "raw"
+max_line_length = 100
+
+[tool.sqlfluff.indentation]
+tab_space_size = 2
+
